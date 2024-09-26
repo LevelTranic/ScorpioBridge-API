@@ -22,18 +22,13 @@ repositories {
 dependencies {
     // Utils
     api("org.slf4j:slf4j-api:2.0.12")
-    api("it.unimi.dsi:fastutil:8.5.14")
-    api("com.google.guava:guava:33.2.1-jre")
-    api("org.yaml:snakeyaml:2.2")
     api("com.squareup.okhttp3:okhttp:4.12.0")
-    api("com.github.ben-manes.caffeine:caffeine:3.1.8")
 
     // Tranic Utils
     api("one.tranic:kupdate:1.0.0")
 
     // Kotlin
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }
 
 java {
@@ -41,7 +36,7 @@ java {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
 val javadocJar by tasks.registering(Jar::class) {
