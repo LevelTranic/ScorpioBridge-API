@@ -58,3 +58,6 @@ repository:
 dependency:
   - one.tranic:scorpio-api:1.0.0
 ```
+
+## Links
+- [Javadoc](https://javadoc.tranic.one/scorpio-bridge-api/)
