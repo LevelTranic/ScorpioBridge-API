@@ -58,11 +58,9 @@ object AdapterManager {
      * @param adapter the AdapterExtension to be registered
      */
     fun registerAdapter(adapter: AdapterExtension) {
-        if (registeredAdapters.isNotEmpty()) {
-            getAdapterById(adapter.getIdentifier())?.let {
-                if (it.getStatus()) it.shutdown()
-                registeredAdapters.remove(it)
-            }
+        getAdapterById(adapter.getIdentifier())?.let {
+            if (it.getStatus()) it.shutdown()
+            registeredAdapters.remove(it)
         }
         registeredAdapters.add(adapter)
     }
@@ -84,7 +82,6 @@ object AdapterManager {
      * @param identifier the Adapter Identifier to be unregistered
      */
     fun unregisterAdapter(identifier: String) {
-        if (registeredAdapters.isEmpty()) return
         getAdapterById(identifier)?.let {
             if (it.getStatus()) it.shutdown()
             registeredAdapters.remove(it)
@@ -113,10 +110,10 @@ object AdapterManager {
      */
     fun sendMessageToAllAdapters(message: PlayerMessage) {
         if (registeredAdapters.isEmpty()) return
-        val msg = if (::filter.isInitialized) filter(message) as PlayerMessage? else message
-        if (msg == null) return
-        for (adapter in registeredAdapters) {
-            adapter.handleMessage(msg)
+        (if (::filter.isInitialized) filter(message) as PlayerMessage? else message)?.let {
+            for (adapter in registeredAdapters) {
+                adapter.handleMessage(it)
+            }
         }
     }
 
@@ -129,9 +126,9 @@ object AdapterManager {
      */
     fun receiveAdaptersMessage(message: PlatformMessage) {
         if (!this::receivePlatformMessage.isInitialized) return
-        val msg = if (::filter.isInitialized) filter(message) as PlatformMessage? else message
-        if (msg == null) return
-        receivePlatformMessage(msg)
+        (if (::filter.isInitialized) filter(message) as PlatformMessage? else message)?.let {
+            receivePlatformMessage(it)
+        }
     }
 
     /**
@@ -142,6 +139,7 @@ object AdapterManager {
      * @return the [AdapterExtension] if found, null otherwise
      */
     fun getAdapterById(id: String): AdapterExtension? {
+        if (registeredAdapters.isEmpty()) return null
         return registeredAdapters.find { it.getIdentifier() == id }
     }
 }

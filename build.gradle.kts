@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "one.tranic"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     maven("https://maven-central-asia.storage-download.googleapis.com/maven2/") {
