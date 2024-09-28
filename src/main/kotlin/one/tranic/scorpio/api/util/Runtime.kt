@@ -3,6 +3,8 @@ package one.tranic.scorpio.api.util
 /**
  * Utility object for runtime-related functions in the Scorpio API.
  * This object provides methods to retrieve information about the Java runtime environment.
+ *
+ * @since 1.0.0
  */
 object Runtime {
     private var javaVersion: Int? = null
@@ -13,6 +15,7 @@ object Runtime {
      * The version is returned as an integer. For example, for Java 8, it returns 8;
      * for Java 11, it returns 11.
      *
+     * @since 1.0.0
      * @return the major Java version as an Int
      */
     fun getJavaVersion(): Int {

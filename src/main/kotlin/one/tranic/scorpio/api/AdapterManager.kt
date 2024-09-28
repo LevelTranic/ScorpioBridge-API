@@ -1,5 +1,6 @@
 package one.tranic.scorpio.api
 
+import one.tranic.scorpio.api.impl.AdapterExtension
 import one.tranic.scorpio.api.impl.Message
 import one.tranic.scorpio.api.impl.PlatformMessage
 import org.slf4j.Logger
@@ -7,6 +8,8 @@ import org.slf4j.Logger
 /**
  * Manages the lifecycle and communication of adapter extensions in the Scorpio API.
  * This object provides methods to register adapters, send messages, and manage filters.
+ *
+ * @since 1.0.0
  */
 object AdapterManager {
     private val registeredAdapters = mutableListOf<AdapterExtension>()
@@ -18,6 +21,7 @@ object AdapterManager {
      * Sets the logger for the AdapterManager.
      * Adapters should not call this method.
      *
+     * @since 1.0.0
      * @param logger the Logger instance to be used for logging
      */
     fun setLogger(logger: Logger) {
@@ -28,6 +32,7 @@ object AdapterManager {
      * Sets the method for receiving platform messages.
      * This method should only be called by the main plugin and should not be called by adapters.
      *
+     * @since 1.0.0
      * @param expect the function to handle incoming PlatformMessage
      */
     fun setReceivePlatformMessage(expect: (PlatformMessage) -> Unit) {
@@ -37,6 +42,7 @@ object AdapterManager {
     /**
      * Registers a filter for processing messages.
      *
+     * @since 1.0.0
      * @param filter a function that takes a Message and returns a filtered Message or null
      */
     fun registerFilter(filter: (message: Message) -> Message?) {
@@ -47,6 +53,7 @@ object AdapterManager {
      * Registers an adapter extension.
      * If an adapter with the same identifier is already registered, it will be shut down before registering the new one.
      *
+     * @since 1.0.0
      * @param adapter the AdapterExtension to be registered
      */
     fun registerAdapter(adapter: AdapterExtension) {
@@ -65,6 +72,7 @@ object AdapterManager {
     /**
      * Unregisters an adapter extension.
      *
+     * @since 1.0.0
      * @param adapter the AdapterExtension to be unregistered
      */
     fun unregisterAdapter(adapter: AdapterExtension) {
@@ -74,6 +82,7 @@ object AdapterManager {
     /**
      * Unregisters an adapter extension.
      *
+     * @since 1.0.0
      * @param identifier the Adapter Identifier to be unregistered
      */
     fun unregisterAdapter(identifier: String) {
@@ -88,6 +97,8 @@ object AdapterManager {
 
     /**
      * Clears all registered adapters, shutting them down if they are active.
+     *
+     * @since 1.0.0
      */
     fun clearAllAdapters() {
         if (registeredAdapters.isEmpty()) return
@@ -101,6 +112,7 @@ object AdapterManager {
      * Sends a message to all registered adapters.
      * If a filter is registered, the message will be processed by it before being sent.
      *
+     * @since 1.0.0
      * @param message the Message to be sent to all adapters
      */
     fun sendMessageToAllAdapters(message: Message) {
@@ -115,6 +127,7 @@ object AdapterManager {
      * Receives and processes a message from adapters.
      * If the message is a PlatformMessage, it will be sent to the registered receive method.
      *
+     * @since 1.0.0
      * @param message the Message received from an adapter
      */
     fun receiveAdaptersMessage(message: Message) {
@@ -129,6 +142,7 @@ object AdapterManager {
     /**
      * Retrieves an adapter by its identifier.
      *
+     * @since 1.0.0
      * @param id the identifier of the adapter
      * @return the AdapterExtension if found, null otherwise
      */
