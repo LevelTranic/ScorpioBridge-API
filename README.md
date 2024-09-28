@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'one.tranic:scorpio-api:1.0.0'
+    compileOnly 'one.tranic:scorpio-api:1.1.0'
 }
 
 ```
@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("one.tranic:scorpio-api:1.0.0")
+    compileOnly("one.tranic:scorpio-api:1.1.0")
 }
 ```
 
@@ -45,7 +45,7 @@ dependencies {
         <dependency>
             <groupId>one.tranic</groupId>
             <artifactId>scorpio-api</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -56,7 +56,7 @@ dependencies {
 repository:
   - https://repo.repsy.io/mvn/rdb/default
 dependency:
-  - one.tranic:scorpio-api:1.0.0
+  - one.tranic:scorpio-api:1.1.0
 ```
 
 ## Links
