@@ -3,6 +3,7 @@ package one.tranic.scorpio.api
 import one.tranic.scorpio.api.impl.AdapterExtension
 import one.tranic.scorpio.api.impl.Message
 import one.tranic.scorpio.api.impl.PlatformMessage
+import one.tranic.scorpio.api.impl.PlayerMessage
 import org.slf4j.Logger
 
 /**
@@ -58,12 +59,9 @@ object AdapterManager {
      */
     fun registerAdapter(adapter: AdapterExtension) {
         if (registeredAdapters.isNotEmpty()) {
-            registeredAdapters.forEach {
-                if (it.getIdentifier() == adapter.getIdentifier()) {
-                    if (it.getStatus()) it.shutdown()
-                    registeredAdapters.remove(it)
-                    return@forEach
-                }
+            getAdapterById(adapter.getIdentifier())?.let {
+                if (it.getStatus()) it.shutdown()
+                registeredAdapters.remove(it)
             }
         }
         registeredAdapters.add(adapter)
@@ -86,12 +84,10 @@ object AdapterManager {
      * @param identifier the Adapter Identifier to be unregistered
      */
     fun unregisterAdapter(identifier: String) {
-        for (adapter in registeredAdapters) {
-            if (adapter.getIdentifier() == identifier) {
-                if (adapter.getStatus()) adapter.shutdown()
-                registeredAdapters.remove(adapter)
-                break
-            }
+        if (registeredAdapters.isEmpty()) return
+        getAdapterById(identifier)?.let {
+            if (it.getStatus()) it.shutdown()
+            registeredAdapters.remove(it)
         }
     }
 
@@ -113,10 +109,11 @@ object AdapterManager {
      * If a filter is registered, the message will be processed by it before being sent.
      *
      * @since 1.0.0
-     * @param message the Message to be sent to all adapters
+     * @param message the [PlayerMessage] to be sent to all adapters
      */
-    fun sendMessageToAllAdapters(message: Message) {
-        val msg = if (::filter.isInitialized) filter(message) else message
+    fun sendMessageToAllAdapters(message: PlayerMessage) {
+        if (registeredAdapters.isEmpty()) return
+        val msg = if (::filter.isInitialized) filter(message) as PlayerMessage? else message
         if (msg == null) return
         for (adapter in registeredAdapters) {
             adapter.handleMessage(msg)
@@ -125,18 +122,16 @@ object AdapterManager {
 
     /**
      * Receives and processes a message from adapters.
-     * If the message is a PlatformMessage, it will be sent to the registered receive method.
+     * If the message is a [PlatformMessage], it will be sent to the registered receive method.
      *
      * @since 1.0.0
-     * @param message the Message received from an adapter
+     * @param message the [PlatformMessage] received from an adapter
      */
-    fun receiveAdaptersMessage(message: Message) {
-        if (message is PlatformMessage) {
-            if (!this::receivePlatformMessage.isInitialized) return
-            val msg: PlatformMessage? = if (::filter.isInitialized) filter(message) as PlatformMessage? else message
-            if (msg == null) return
-            receivePlatformMessage(msg)
-        }
+    fun receiveAdaptersMessage(message: PlatformMessage) {
+        if (!this::receivePlatformMessage.isInitialized) return
+        val msg = if (::filter.isInitialized) filter(message) as PlatformMessage? else message
+        if (msg == null) return
+        receivePlatformMessage(msg)
     }
 
     /**
@@ -144,7 +139,7 @@ object AdapterManager {
      *
      * @since 1.0.0
      * @param id the identifier of the adapter
-     * @return the AdapterExtension if found, null otherwise
+     * @return the [AdapterExtension] if found, null otherwise
      */
     fun getAdapterById(id: String): AdapterExtension? {
         return registeredAdapters.find { it.getIdentifier() == id }
